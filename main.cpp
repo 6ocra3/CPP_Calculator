@@ -13,7 +13,7 @@ int isDigit(char c){
 }
 
 int isSign(string c){
-    if(c != "+" && c != "-" && c != "*" && c != "/"){
+    if(c != "+" && c != "-" && c != "*" && c != "/" && c != "^"){
         return 0;
     }
     return 1;
@@ -72,6 +72,9 @@ int getPrioritet(string s){
     else if(s == "*" || s == "/"){
         return 3;
     }
+    else if(s == "^"){
+        return 4;
+    }
     else{
         return 2;
     }
@@ -88,6 +91,9 @@ int oper(string c){
     }
     else if(c == "*"){
         return a*b;
+    }
+    else if(c == "^"){
+        return pow(a, b);
     }
     else{
         return a/b;
