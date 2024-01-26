@@ -44,7 +44,7 @@ public:
         return stack[cur - 1];
     }
 };
-
+// TODO
 class STACK2{
 public:
     int stack[100];
@@ -72,6 +72,9 @@ int getPrioritet(string s){
     else if(s == "*" || s == "/"){
         return 3;
     }
+    else if(s == "^"){
+        return 4;
+    }
     else{
         return 2;
     }
@@ -97,16 +100,23 @@ int oper(string c){
 
 int main(){
     string s;
-    cin >> s;
+    getline(cin, s);
     cout << "Expression:\n" << s << "\n";
     string curDig = "";
-    s+='!';
+    string curOper = "";
+    s+=" ! ";
     vector<string> a;
     vector<string> la;
     STACK stack;
     for(int i = 0; i<s.length();i++){
-        if(isDigit(s[i])){
-            curDig+=s[i];
+        if(s[i] != ' '){
+            if(isDigit(s[i])){
+                curDig += s[i];
+            }
+            else{
+                curOper += s[i];
+            }
+
         }
         else{
             if(curDig.length()){
@@ -114,37 +124,38 @@ int main(){
                 la.push_back(curDig);
                 curDig = "";
             }
-            string sign = "";
-            sign += s[i];
-            if(stack.cur == 0){
-                stack.push(sign);
-            }
             else{
-                if(sign == "!"){
-                    while(stack.cur){
-                        la.push_back(stack.pop());
-                    }
-                }
-                else if(sign == "("){
-                    stack.push(sign);
-                }
-                else if(sign != ")"){
-                    if(getPrioritet(stack.get()) >= getPrioritet(sign)){
-                        while(getPrioritet(stack.get()) >= getPrioritet(sign) && stack.get() != "(" && stack.cur > 0){
-                            la.push_back(stack.pop());
-                        }
-                        stack.push(sign);
-                    }
-                    else{
-                        stack.push(sign);
-                    }
+                if(stack.cur == 0){
+                    stack.push(curOper);
                 }
                 else{
-                    while(stack.get() != "("){
-                        la.push_back(stack.pop());
+                    if(curOper == "!"){
+                        while(stack.cur){
+                            la.push_back(stack.pop());
+                        }
                     }
-                    stack.pop();
+                    else if(curOper == "("){
+                        stack.push(curOper);
+                    }
+                    else if(curOper != ")"){
+                        if(getPrioritet(stack.get()) >= getPrioritet(curOper)){
+                            while(getPrioritet(stack.get()) >= getPrioritet(curOper) && stack.get() != "(" && stack.cur > 0){
+                                la.push_back(stack.pop());
+                            }
+                            stack.push(curOper);
+                        }
+                        else{
+                            stack.push(curOper);
+                        }
+                    }
+                    else{
+                        while(stack.get() != "("){
+                            la.push_back(stack.pop());
+                        }
+                        stack.pop();
+                    }
                 }
+                curOper = "";
             }
         }
     }
