@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 using namespace std;
 
 
@@ -13,7 +14,7 @@ int isDigit(char c){
 }
 
 int isSign(string c){
-    if(c != "+" && c != "-" && c != "*" && c != "/"){
+    if(c != "+" && c != "-" && c != "*" && c != "/" or c != "sin"){
         return 0;
     }
     return 1;
@@ -47,7 +48,7 @@ public:
 // TODO
 class STACK2{
 public:
-    int stack[100];
+    double stack[100];
     int cur = 0;
 
     void push(int c){
@@ -80,7 +81,19 @@ int getPrioritet(string s){
     }
 }
 
+int sinv(int num){
+    float ans = sin(num);
+//    for(int i = 0;i<100000;++i){
+//        ans+= (pow(-1,i) *  pow(num,2*i+1))/()
+//    }
+    return ans;
+}
+
+
 int oper(string c){
+    if(c == "sin"){
+        sinv(q.pop());
+    }
     int b = q.pop();
     int a = q.pop();
     if(c == "+"){
@@ -97,6 +110,8 @@ int oper(string c){
     }
 
 }
+
+
 
 int main(){
     string s;
@@ -134,7 +149,7 @@ int main(){
                             la.push_back(stack.pop());
                         }
                     }
-                    else if(curOper == "("){
+                    else if((curOper == "(") or (curOper =="sin") or (curOper == "cos")){
                         stack.push(curOper);
                     }
                     else if(curOper != ")"){
