@@ -27,44 +27,26 @@ int strToInt(string c){
     }
     return itog;
 }
-
+template<typename T>
 class STACK{
 public:
-    string stack[100];
+    T stack[100];
     int cur = 0;
 
-    void push(string c){
+    void push(T c){
         stack[cur] = c;
         cur++;
     }
-    string pop(){
+    T pop(){
         cur--;
         return stack[cur];
     }
-    string get(){
-        return stack[cur - 1];
-    }
-};
-// TODO
-class STACK2{
-public:
-    double stack[100];
-    int cur = 0;
-
-    void push(int c){
-        stack[cur] = c;
-        cur++;
-    }
-    int pop(){
-        cur--;
-        return stack[cur];
-    }
-    int get(){
+    T get(){
         return stack[cur - 1];
     }
 };
 
-STACK2 q;
+STACK<int> q;
 
 int getPrioritet(string s){
     if(s == "(" || s == ")"){
@@ -122,7 +104,7 @@ int main(){
     s+=" ! ";
     vector<string> a;
     vector<string> la;
-    STACK stack;
+    STACK<string> stack;
     for(int i = 0; i<s.length();i++){
         if(s[i] != ' '){
             if(isDigit(s[i])){
