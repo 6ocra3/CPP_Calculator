@@ -14,7 +14,7 @@ int isDigit(char c){
 }
 
 int isSign(string c){
-    if(c != "+" && c != "-" && c != "*" && c != "/" or c != "sin"){
+    if(c != "+" && c != "-" && c != "*" && c != "/" and c != "^" and c != "sin" and c!= "cos" and c!="tg" and c!="ctg" and c!="log"){
         return 0;
     }
     return 1;
@@ -27,6 +27,7 @@ int strToInt(string c){
     }
     return itog;
 }
+
 template<typename T>
 class STACK{
 public:
@@ -46,7 +47,7 @@ public:
     }
 };
 
-STACK<int> q;
+STACK<double> q;
 
 int getPrioritet(string s){
     if(s == "(" || s == ")"){
@@ -63,21 +64,61 @@ int getPrioritet(string s){
     }
 }
 
-int sinv(int num){
-    float ans = sin(num);
-//    for(int i = 0;i<100000;++i){
-//        ans+= (pow(-1,i) *  pow(num,2*i+1))/()
+double fact(double num){
+    double ans = 1;
+    for(long long i = 1;i<=num;++i){
+        ans *= i;
+    }
+    return ans;
+}
+
+double sinv(double num){
+    double ans = 0;
+//    for(int i = 0;i<1000;++i){
+//        ans+= (pow(-1,i) *  pow(num,2*i+1))/(fact(2 * i +1));
 //    }
+    ans = sin(num);
+    return ans;
+}
+
+double cosv(double num){
+    double ans = 0;
+//    for(int i = 0;i<1000;++i){
+//        ans+= (pow(-1,i) *  pow(num,2*i))/(fact(2 * i));
+//    }
+    ans = cos(num);
     return ans;
 }
 
 
-int oper(string c){
+double oper(string c){
     if(c == "sin"){
-        sinv(q.pop());
+       double temp = sinv(q.pop());
+       return temp;
     }
-    int b = q.pop();
-    int a = q.pop();
+    else if(c == "cos"){
+        double temp = cosv(q.pop());
+        return temp;
+    }
+    else if(c == "tg"){
+        double temp = q.pop();
+        double tempsin = sinv(temp);
+        double tempcos = cosv(temp);
+        return tempsin / tempcos;
+    }
+    else if(c=="ctg"){
+        double temp = q.pop();
+        double tempsin = sinv(temp);
+        double tempcos = cosv(temp);
+        return tempcos / tempsin;
+    }
+    else if(c == "log"){
+        double temp = q.pop();
+        return temp;
+    }
+    
+    double b = q.pop();
+    double a = q.pop();
     if(c == "+"){
         return a+b;
     }
@@ -86,6 +127,9 @@ int oper(string c){
     }
     else if(c == "*"){
         return a*b;
+    }
+    else if (c == "^"){
+        return pow(a,b);
     }
     else{
         return a/b;
@@ -157,7 +201,7 @@ int main(){
         }
     }
 
-    int last = 0;
+    double last = 0;
     for(int i = 0; i<la.size();i++){
         if(isSign(la[i])){
             last = oper(la[i]);
