@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "vars.h"
+#include "vars.cpp"
 
 using namespace std;
 
@@ -39,7 +40,7 @@ template<typename T>
 class STACK{
 public:
     T stack[100];
-    int cur = 0;
+    int cur;
 
     void push(T c){
         stack[cur] = c;
@@ -110,7 +111,6 @@ int main(){
         }
     }
     s = calc_var(peremen, s);
-    cout << s;
     s+=" ! ";
     vector<string> a;
     vector<string> la;
