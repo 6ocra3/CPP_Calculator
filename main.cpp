@@ -1,10 +1,26 @@
+#define _USE_MATH_DEFINES
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cmath>
+
 using namespace std;
 
+vector<string> operations {"+","-","^","/","*","sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root"};
+vector<string> preoperations {"sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root", "("};
 
+double pi_eq(int a){
+    double ans = 0;
+    double div = 2;
+    double temp = 0;
+    for (long long i = 0;i<100000000;++i){
+        temp = ((4*i+1) * (4*i+3));
+        ans += div/temp;
+    }
+    return ans;
+}
+
+const double pi = pi_eq(1) * 4.0;
 
 int isDigit(char c){
     if(c - '0' >= 0 && c - '0' <= 9){
@@ -13,11 +29,45 @@ int isDigit(char c){
     return 0;
 }
 
-int isSign(string c){
-    if(c != "+" && c != "-" && c != "*" && c != "/" and c != "^" and c != "sin" and c!= "cos" and c!="tg" and c!="ctg" and c!="log"){
+int isOper(string c){
+    int temp = 0;
+    for(int i = 0;i<operations.size();++i){
+        if(c == operations[i]){
+            temp = 1;
+            break;
+        }
+    }
+    if(temp == 1){
+        return 1;
+    }
+    else{
         return 0;
     }
-    return 1;
+}
+
+int isPreoper(string c){
+    int temp = 0;
+    for(int i = 0;i<preoperations.size();++i){
+        if(c == preoperations[i]){
+            temp = 1;
+            break;
+        }
+    }
+    if(temp == 1){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
+int isSign(string c){
+    if(isOper(c)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 int strToInt(string c){
@@ -64,59 +114,52 @@ int getPrioritet(string s){
     }
 }
 
-double fact(double num){
-    double ans = 1;
-    for(long long i = 1;i<=num;++i){
-        ans *= i;
-    }
-    return ans;
-}
-
-double sinv(double num){
-    double ans = 0;
-//    for(int i = 0;i<1000;++i){
-//        ans+= (pow(-1,i) *  pow(num,2*i+1))/(fact(2 * i +1));
-//    }
-    ans = sin(num);
-    return ans;
-}
-
-double cosv(double num){
-    double ans = 0;
-//    for(int i = 0;i<1000;++i){
-//        ans+= (pow(-1,i) *  pow(num,2*i))/(fact(2 * i));
-//    }
-    ans = cos(num);
-    return ans;
-}
-
-
 double oper(string c){
     if(c == "sin"){
-       double temp = sinv(q.pop());
-       return temp;
+       return sin(q.pop());
     }
     else if(c == "cos"){
-        double temp = cosv(q.pop());
-        return temp;
+        return cos(q.pop());
     }
     else if(c == "tg"){
         double temp = q.pop();
-        double tempsin = sinv(temp);
-        double tempcos = cosv(temp);
+        double tempsin = sin(temp);
+        double tempcos = cos(temp);
         return tempsin / tempcos;
     }
     else if(c=="ctg"){
         double temp = q.pop();
-        double tempsin = sinv(temp);
-        double tempcos = cosv(temp);
+        double tempsin = sin(temp);
+        double tempcos = cos(temp);
         return tempcos / tempsin;
     }
     else if(c == "log"){
-        double temp = q.pop();
+        double num = log(q.pop()); // натуральный логарифм от числа
+        double base = log(q.pop()); // натуральный логарифм от основания
+        return num / base;
+    }
+    else if( c == "ln"){
+        double temp = log (q.pop());;
         return temp;
     }
-    
+    else if (c== "root"){
+        double num = q.pop(); // подкоренное выражение
+        double base = q.pop(); // значение корня
+        return pow(num,1/base);
+    }
+    else if (c == "arcsin"){
+        return asin(q.pop());
+    }
+    else if (c == "arccos"){
+        return acos(q.pop());
+    }
+    else if (c == "arctg"){
+        return atan(q.pop());
+    }
+    else if (c == "arcctg"){
+        double temp = atan(q.pop());
+        return pi/2 - temp;
+    }
     double b = q.pop();
     double a = q.pop();
     if(c == "+"){
@@ -148,9 +191,13 @@ int main(){
     s+=" ! ";
     vector<string> a;
     vector<string> la;
+    STACK<string> pre;
     STACK<string> stack;
     for(int i = 0; i<s.length();i++){
-        if(s[i] != ' '){
+        if(s[i] == ','){
+            continue;
+        }
+        else if(s[i] != ' '){
             if(isDigit(s[i])){
                 curDig += s[i];
             }
@@ -175,13 +222,16 @@ int main(){
                             la.push_back(stack.pop());
                         }
                     }
-                    else if((curOper == "(") or (curOper =="sin") or (curOper == "cos")){
+                    else if(isPreoper(curOper)){
                         stack.push(curOper);
                     }
                     else if(curOper != ")"){
-                        if(getPrioritet(stack.get()) >= getPrioritet(curOper)){
-                            while(getPrioritet(stack.get()) >= getPrioritet(curOper) && stack.get() != "(" && stack.cur > 0){
+                        if(getPrioritet(stack.get()) >= getPrioritet(curOper) or (isPreoper(stack.get()))){
+                            while((getPrioritet(stack.get()) >= getPrioritet(curOper) && stack.get() != "(" && stack.cur > 0) or ((isPreoper(stack.get()))&& stack.cur > 0&& stack.get() != "(")){
                                 la.push_back(stack.pop());
+                                if(stack.cur == 0){
+                                    break;
+                                }
                             }
                             stack.push(curOper);
                         }
@@ -208,6 +258,9 @@ int main(){
             q.push(last);
         }
         else{
+            if(la[i] == ""){
+                continue;
+            }
             q.push(strToInt(la[i]));
         }
     }
