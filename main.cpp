@@ -2,16 +2,17 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include <complex>
 #include "vars.h"
 #include "vars.cpp"
 #include <cmath>
-
+#include "func.h"
+#include "func.cpp"
 using namespace std;
 
 vector<string> operations {"+","-","^","/","*","sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root"};
 vector<string> preoperations {"sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root", "("};
-
+//
 double pi_eq(int a){
     double ans = 0;
     double div = 2;
@@ -201,15 +202,45 @@ double oper(string c){
 
 }
 
+string calc_func(string str, FUNCS funcs){
+    for (int i = 0; i < funcs.cnt; i++) {
+        while (str.find(funcs.funcs[i].name) != string::npos) {
+            string temp = funcs.funcs[i].expression;
+            string line = "";
+            int curr = str.find(funcs.funcs[i].name) + 4;
+            while(str[curr] != ' '){
+                line += str[curr];
+                curr+=1;
+            }
+            VARS makrak;
+            makrak.add_var(funcs.funcs[i].num[0],line);
+            temp = calc_var(makrak,temp);
+            temp = "( " + temp + " )";
+            str.replace(str.find(funcs.funcs[i].name),curr+2-str.find(funcs.funcs[i].name),temp);
+        }
+    }
+    return str;
+}
 
+//F ( x ) + G ( y ) + F ( 2 )
+//F ( x ) = x + 3
+//G ( y ) = y - 3
+//x = 0
+//y = 6
+
+//root ( 3 , sin ( F ( x ) + G ( y ) ) )
+//F ( x ) = log ( 3 , 2 )
+//G ( y ) = ln ( y )
+//x = 1
+//y = 4
 
 int main(){
     string s;
     getline(cin, s);
-    cout << "Expression:\n" << s << "\n";
     string curDig = "";
     string curOper = "";
     VARS peremen;
+    FUNCS funcs;
     while (cin) {
         string cur_s;
         getline(cin, cur_s);
@@ -222,8 +253,20 @@ int main(){
             }
             peremen.add_var(cur_s[0], cur_num);
         }
+        else if (cur_s[0] >= 'A' && cur_s[0] <= 'Z') {
+            string cur_exp;
+            for (int i = cur_s.find('=')+2; i < cur_s.size(); i++) {
+                cur_exp += cur_s[i];
+            }
+            string temp = "";
+            temp += cur_s[4];
+            funcs.add_func(cur_s[0], cur_exp,temp);
+        }
     }
-    s = calc_var(peremen, s);
+    for (long i = 0; i<322;++i){
+        s = calc_var(peremen, s);
+        s = calc_func(s,funcs);
+    }
     s+=" ! ";
     vector<string> a;
     vector<string> la;
