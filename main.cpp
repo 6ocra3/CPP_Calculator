@@ -1,4 +1,4 @@
-#define _USE_MATH_DEFINES
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -36,7 +36,7 @@ string calc_var(VARS list, string str) {
 }
 
 int isDigit(char c){
-    if(c - '0' >= 0 && c - '0' <= 9){
+    if((c - '0' >= 0 && c - '0' <= 9) or (c=='.')){
         return 1;
     }
     return 0;
@@ -83,13 +83,21 @@ int isSign(string c){
     }
 }
 
-int strToInt(string c){
+double strToInt_Double(string c){
     int itog = 0;
-    for(int i = 0; i<c.length();i++){
-        itog = itog * 10 + c[i] - '0';
+    int a = c.find('.');
+    if(a){
+        return stod(c);
     }
-    return itog;
+    else{
+        for(int i = 0; i<c.length();i++){
+            itog = itog * 10 + c[i] - '0';
+        }
+        return itog;
+    }
 }
+
+
 
 template<typename T>
 class STACK{
@@ -112,8 +120,6 @@ public:
 
 STACK<double> q;
 
-
-
 int getPrioritet(string s){
     if(s == "(" || s == ")"){
         return 1;
@@ -131,7 +137,7 @@ int getPrioritet(string s){
 
 double oper(string c){
     if(c == "sin"){
-       return sin(q.pop());
+        return sin(q.pop());
     }
     else if(c == "cos"){
         return cos(q.pop());
@@ -291,7 +297,7 @@ int main(){
             if(la[i] == ""){
                 continue;
             }
-            q.push(strToInt(la[i]));
+            q.push(strToInt_Double(la[i]));
         }
     }
 
