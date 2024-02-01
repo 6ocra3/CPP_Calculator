@@ -112,6 +112,8 @@ public:
 
 STACK<double> q;
 
+
+
 int getPrioritet(string s){
     if(s == "(" || s == ")"){
         return 1;
