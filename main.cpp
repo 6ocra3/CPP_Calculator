@@ -1,9 +1,19 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "vars.h"
+#include "vars.cpp"
+
 using namespace std;
 
-
+string calc_var(VARS list, string str) {
+    for (int i = 0; i < list.cnt; i++) {
+        while (str.find(list.vars[i].var) != string::npos) {
+            str.replace(str.find(list.vars[i].var), 1, list.vars[i].num);
+        }
+    }
+    return str;
+}
 
 int isDigit(char c){
     if(c - '0' >= 0 && c - '0' <= 9){
@@ -86,6 +96,21 @@ int main(){
     cout << "Expression:\n" << s << "\n";
     string curDig = "";
     string curOper = "";
+    VARS peremen;
+    while (cin) {
+        string cur_s;
+        getline(cin, cur_s);
+        if (cur_s[0] >= 'a' && cur_s[0] <= 'z') {
+            string cur_num;
+            for (int i = cur_s.find('=')+1; i < cur_s.size(); i++) {
+                if (cur_s[i] != ' ') {
+                    cur_num += cur_s[i];
+                }
+            }
+            peremen.add_var(cur_s[0], cur_num);
+        }
+    }
+    s = calc_var(peremen, s);
     s+=" ! ";
     vector<string> a;
     vector<string> la;
