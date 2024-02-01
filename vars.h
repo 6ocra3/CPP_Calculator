@@ -1,6 +1,5 @@
-//
-// Created by Макар Кряжев on 31.01.2024.
-//
+#include <string>
+using namespace std;
 
 #ifndef P1_CALCULATOR_VARS_H
 #define P1_CALCULATOR_VARS_H
@@ -8,16 +7,18 @@
 class VAR{
 public:
     char var;
-    int num;
-    VAR(char a, int b);
+    string num;
+    VAR(char a, string b);
+    VAR();
 };
 
 class VARS{
+public:
     VAR vars[100];
     int cnt;
     VARS();
-    int get_num(char a);
-    void add_var(char a, int b);
+    string get_num(char a);
+    void add_var(char a, string b);
 };
 
 #endif
