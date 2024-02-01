@@ -40,7 +40,7 @@ template<typename T>
 class STACK{
 public:
     T stack[100];
-    int cur;
+    int cur = 0;
 
     void push(T c){
         stack[cur] = c;

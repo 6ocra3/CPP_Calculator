@@ -20,6 +20,7 @@ void VARS::add_var(char a, string b) {
     for(int i = 0; i<cnt;i++){
         if(vars[i].var == a){
             vars[i].num = b;
+            return;
         }
     }
     VAR new_var(a, b);
