@@ -10,8 +10,8 @@
 #include "func.cpp"
 using namespace std;
 
-vector<string> operations {"+","-","^","/","*","sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root"};
-vector<string> preoperations {"sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root", "("};
+vector<string> operations {"+","-","^","/","*","sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root","not"};
+vector<string> preoperations {"sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root", "(","not"};
 //
 double pi_eq(int a){
     double ans = 0;
@@ -167,6 +167,11 @@ double oper(string c){
     else if (c== "root"){
         double num = q.pop(); // подкоренное выражение
         double base = q.pop(); // значение корня
+        if(int(base) % 2 == 1){
+            if(num < 0){
+                return 0 - pow(abs(num),1/abs(base));
+            }
+        }
         return pow(num,1/base);
     }
     else if (c == "arcsin"){
@@ -181,6 +186,9 @@ double oper(string c){
     else if (c == "arcctg"){
         double temp = atan(q.pop());
         return pi/2 - temp;
+    }
+    else if(c == "not"){
+        return 0 - q.pop();
     }
     double b = q.pop();
     double a = q.pop();
@@ -312,7 +320,12 @@ int main(){
                                     break;
                                 }
                             }
-                            stack.push(curOper);
+                            if(curOper==""){
+                                continue;
+                            }
+                            else{
+                                stack.push(curOper);
+                            }
                         }
                         else{
                             stack.push(curOper);
