@@ -1,11 +1,11 @@
 
-
+#include <cmath>
 #include <stdexcept>
 #include "operations.h"
 
 using namespace std;
-vector<string> operations {"+","-","^","/","*","sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root","not"};
-vector<string> preoperations {"sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root", "(","not"};
+vector<string> operations {"+","-","^","/","*","sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root","not","fact"};
+vector<string> preoperations {"sin","cos","tg","ctg","arcsin","arccos","arctg","arcctg","log","ln","root", "(","not","fact"};
 //
 double pi_eq(int a){
     double ans = 0;
@@ -223,6 +223,19 @@ double oper(string c){
     }
     else if(c == "not"){
         return 0 - q.pop();
+    }
+    else if (c == "fact"){
+        double temp = q.pop();
+        if(int(temp) == temp){
+            long long ans = 1;
+            for(long i = 1;i<=int(temp);++i){
+                ans*=i;
+            }
+            return ans;
+        }
+        else{
+            throw invalid_argument(c + " is unidentified");
+        }
     }
     double b = q.pop();
     double a = q.pop();
